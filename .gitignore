@@ -1,3 +1,4 @@
 terraform-provider-tsuru
 .terraform
-main.tf
+*.tf
+*.tfstate

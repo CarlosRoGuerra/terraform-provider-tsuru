@@ -1,10 +1,14 @@
 package main
 
 import (
+	"github.com/google/go-querystring/query"
+
+	"github.com/go-resty/resty"
+
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func resourceApp() *schema.Resource {
+func resourceTsuruApp() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceAppCreate,
 		Read:   resourceAppRead,
@@ -12,11 +16,15 @@ func resourceApp() *schema.Resource {
 		Delete: resourceAppDelete,
 
 		Schema: map[string]*schema.Schema{
-			"appname": &schema.Schema{
+			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"teamOwner": &schema.Schema{
+			"platform": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"team": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -40,8 +48,35 @@ func resourceApp() *schema.Resource {
 	}
 }
 
-func resourceAppCreate(d *schema.ResourceData, m interface{}) error {
+type tsuruApp struct {
+	Name        string `url:"Name,omitempty"`
+	Platform    string `url:"Platform,omitempty"`
+	TeamOwner   string `url:"TeamOwner,omitempty"`
+	Plan        string `url:"Plan,omitempty"`
+	Router      string `url:"Router,omitempty"`
+	Pool        string `url:"Pool,omitempty"`
+	Description string `url:"Description,omitempty"`
+}
 
+func resourceAppCreate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*resty.Client)
+	appData := &tsuruApp{
+		Name:        d.Get("name").(string),
+		Platform:    d.Get("platform").(string),
+		TeamOwner:   d.Get("team").(string),
+		Plan:        d.Get("plan").(string),
+		Router:      d.Get("router").(string),
+		Pool:        d.Get("pool").(string),
+		Description: d.Get("description").(string),
+	}
+
+	body, _ := query.Values(appData)
+	_, err := client.R().SetBody(body.Encode()).Post("/apps")
+	if err != nil {
+		return err
+	}
+
+	d.SetId(appData.Name)
 	return nil
 }
 
