@@ -89,5 +89,12 @@ func resourceAppUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceAppDelete(d *schema.ResourceData, m interface{}) error {
+	client := m.(*resty.Client)
+	appName := d.Get("name").(string)
+
+	_, err := client.R().Delete("/apps/" + appName)
+	if err != nil {
+		return err
+	}
 	return nil
 }
