@@ -1,9 +1,7 @@
 package main
 
 import (
-	"github.com/google/go-querystring/query"
-
-	"github.com/go-resty/resty"
+	"github.com/tsuru/go-tsuruclient/pkg/tsuru"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -48,30 +46,21 @@ func resourceTsuruApp() *schema.Resource {
 	}
 }
 
-type tsuruApp struct {
-	Name        string `url:"Name,omitempty"`
-	Platform    string `url:"Platform,omitempty"`
-	TeamOwner   string `url:"TeamOwner,omitempty"`
-	Plan        string `url:"Plan,omitempty"`
-	Router      string `url:"Router,omitempty"`
-	Pool        string `url:"Pool,omitempty"`
-	Description string `url:"Description,omitempty"`
-}
-
 func resourceAppCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*resty.Client)
-	appData := &tsuruApp{
-		Name:        d.Get("name").(string),
-		Platform:    d.Get("platform").(string),
-		TeamOwner:   d.Get("team").(string),
+	client := m.(*tsuru.APIClient)
+	appData := tsuru.App{
+		Name: d.Get("name").(string),
+		// Tag:
+		Router: d.Get("router").(string),
+		// Routeropts
 		Plan:        d.Get("plan").(string),
-		Router:      d.Get("router").(string),
 		Pool:        d.Get("pool").(string),
+		Platform:    d.Get("platform").(string),
 		Description: d.Get("description").(string),
+		TeamOwner:   d.Get("team").(string),
 	}
 
-	body, _ := query.Values(appData)
-	_, err := client.R().SetBody(body.Encode()).Post("/apps")
+	_, _, err := client.AppApi.AppCreate(nil, appData)
 	if err != nil {
 		return err
 	}
@@ -89,10 +78,10 @@ func resourceAppUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceAppDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*resty.Client)
+	client := m.(*tsuru.APIClient)
 	appName := d.Get("name").(string)
 
-	_, err := client.R().Delete("/apps/" + appName)
+	_, err := client.AppApi.AppDelete(nil, appName)
 	if err != nil {
 		return err
 	}
