@@ -70,6 +70,22 @@ func resourceAppCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceAppRead(d *schema.ResourceData, m interface{}) error {
+	client := m.(*tsuru.APIClient)
+	appName := d.Get("name").(string)
+
+	retrievedApp, response, err := client.AppApi.AppInfo(nil, appName)
+	if response.StatusCode == 404 {
+		d.SetId("")
+		return err
+	}
+
+	d.Set("name", retrievedApp.Name)
+	d.Set("router", retrievedApp.Router)
+	d.Set("plan", retrievedApp.Plan)
+	d.Set("platform", retrievedApp.Platform)
+	d.Set("description", retrievedApp.Description)
+	d.Set("teamowner", retrievedApp.TeamOwner)
+
 	return nil
 }
 
