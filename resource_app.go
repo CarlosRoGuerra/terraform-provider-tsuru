@@ -73,7 +73,7 @@ func resourceAppRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*tsuru.APIClient)
 	appName := d.Get("name").(string)
 
-	retrievedApp, response, err := client.AppApi.AppInfo(nil, appName)
+	retrievedApp, response, err := client.AppApi.AppGet(nil, appName)
 	if response.StatusCode == 404 {
 		d.SetId("")
 		return err

@@ -15,8 +15,6 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"golang.org/x/net/context"
-	"golang.org/x/oauth2"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -29,6 +27,9 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
+
+	"golang.org/x/net/context"
+	"golang.org/x/oauth2"
 )
 
 var (
@@ -43,8 +44,16 @@ type APIClient struct {
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// API Services
-	AppApi    *AppApiService
-	VolumeApi *VolumeApiService
+	AppApi      *AppApiService
+	AuthApi     *AuthApiService
+	EventApi    *EventApiService
+	NodeApi     *NodeApiService
+	PlatformApi *PlatformApiService
+	PoolApi     *PoolApiService
+	ServiceApi  *ServiceApiService
+	TeamApi     *TeamApiService
+	UserApi     *UserApiService
+	VolumeApi   *VolumeApiService
 }
 
 type service struct {
@@ -64,6 +73,14 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 
 	// API Services
 	c.AppApi = (*AppApiService)(&c.common)
+	c.AuthApi = (*AuthApiService)(&c.common)
+	c.EventApi = (*EventApiService)(&c.common)
+	c.NodeApi = (*NodeApiService)(&c.common)
+	c.PlatformApi = (*PlatformApiService)(&c.common)
+	c.PoolApi = (*PoolApiService)(&c.common)
+	c.ServiceApi = (*ServiceApiService)(&c.common)
+	c.TeamApi = (*TeamApiService)(&c.common)
+	c.UserApi = (*UserApiService)(&c.common)
 	c.VolumeApi = (*VolumeApiService)(&c.common)
 
 	return c

@@ -15,13 +15,15 @@ import (
 var errUndefinedTarget = errors.New("undefined tsuru target")
 
 func getHome() string {
-	if u, err := user.Current(); err == nil && u.HomeDir != "" {
-		return u.HomeDir
-	}
 	envs := []string{"HOME", "HOMEPATH"}
 	var home string
 	for i := 0; i < len(envs) && home == ""; i++ {
 		home = os.Getenv(envs[i])
+	}
+	if home == "" {
+		if u, err := user.Current(); err == nil && u.HomeDir != "" {
+			home = u.HomeDir
+		}
 	}
 	return home
 }
@@ -32,9 +34,7 @@ func joinWithUserDir(p ...string) string {
 	return filepath.Join(paths...)
 }
 
-// ReadTarget returns the current target, as defined in the TSURU_TARGET
-// environment variable or in the target file.
-func ReadTarget() (string, error) {
+func getTarget() (string, error) {
 	if target := os.Getenv("TSURU_TARGET"); target != "" {
 		return target, nil
 	}
@@ -54,9 +54,11 @@ func readTarget(targetPath string) (string, error) {
 	return strings.TrimSpace(string(data)), nil
 }
 
+// GetTarget returns the current target, as defined in the TSURU_TARGET
+// environment variable or in the target file.
 func GetTarget() (string, error) {
 	var prefix string
-	target, err := ReadTarget()
+	target, err := getTarget()
 	if err != nil {
 		return "", err
 	}

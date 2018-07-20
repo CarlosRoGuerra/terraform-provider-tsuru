@@ -12,11 +12,12 @@ package tsuru
 import (
 	"encoding/json"
 	"fmt"
-	"golang.org/x/net/context"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"golang.org/x/net/context"
 )
 
 // Linger please
@@ -28,7 +29,7 @@ type VolumeApiService service
 
 /* VolumeApiService
 Bind volume.
-* @param ctx context.Context for authentication, logging, tracing, etc.
+ * @param ctx context.Context for authentication, logging, tracing, etc.
 @param volume Volume name.
 @param optional (nil or map[string]interface{}) with one or more of:
     @param "bindData" (VolumeBindData)
@@ -48,7 +49,6 @@ func (a *VolumeApiService) VolumeBind(ctx context.Context, volume string, localV
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-
 	if strlen(volume) < 1 {
 		return nil, reportError("volume must have at least 1 elements")
 	}
@@ -63,9 +63,7 @@ func (a *VolumeApiService) VolumeBind(ctx context.Context, volume string, localV
 	}
 
 	// to determine the Accept header
-	localVarHttpHeaderAccepts := []string{
-		"application/json",
-	}
+	localVarHttpHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
@@ -102,17 +100,15 @@ func (a *VolumeApiService) VolumeBind(ctx context.Context, volume string, localV
 		bodyBytes, _ := ioutil.ReadAll(localVarHttpResponse.Body)
 		return localVarHttpResponse, reportError("Status: %v, Body: %s", localVarHttpResponse.Status, bodyBytes)
 	}
-
 	return localVarHttpResponse, err
 }
 
 /* VolumeApiService
 Create volume.
-* @param ctx context.Context for authentication, logging, tracing, etc.
-@param volume Volume name.
+ * @param ctx context.Context for authentication, logging, tracing, etc.
 @param volumeData
 @return */
-func (a *VolumeApiService) VolumeCreate(ctx context.Context, volume string, volumeData Volume) (*http.Response, error) {
+func (a *VolumeApiService) VolumeCreate(ctx context.Context, volumeData Volume) (*http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Post")
 		localVarPostBody   interface{}
@@ -121,16 +117,11 @@ func (a *VolumeApiService) VolumeCreate(ctx context.Context, volume string, volu
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/1.4/volumes/{volume}"
-	localVarPath = strings.Replace(localVarPath, "{"+"volume"+"}", fmt.Sprintf("%v", volume), -1)
+	localVarPath := a.client.cfg.BasePath + "/1.4/volumes"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-
-	if strlen(volume) < 1 {
-		return nil, reportError("volume must have at least 1 elements")
-	}
 
 	// to determine the Content-Type header
 	localVarHttpContentTypes := []string{}
@@ -142,9 +133,7 @@ func (a *VolumeApiService) VolumeCreate(ctx context.Context, volume string, volu
 	}
 
 	// to determine the Accept header
-	localVarHttpHeaderAccepts := []string{
-		"application/json",
-	}
+	localVarHttpHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
@@ -179,13 +168,12 @@ func (a *VolumeApiService) VolumeCreate(ctx context.Context, volume string, volu
 		bodyBytes, _ := ioutil.ReadAll(localVarHttpResponse.Body)
 		return localVarHttpResponse, reportError("Status: %v, Body: %s", localVarHttpResponse.Status, bodyBytes)
 	}
-
 	return localVarHttpResponse, err
 }
 
 /* VolumeApiService
 Delete volume.
-* @param ctx context.Context for authentication, logging, tracing, etc.
+ * @param ctx context.Context for authentication, logging, tracing, etc.
 @param volume Volume name.
 @return */
 func (a *VolumeApiService) VolumeDelete(ctx context.Context, volume string) (*http.Response, error) {
@@ -203,7 +191,6 @@ func (a *VolumeApiService) VolumeDelete(ctx context.Context, volume string) (*ht
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-
 	if strlen(volume) < 1 {
 		return nil, reportError("volume must have at least 1 elements")
 	}
@@ -218,9 +205,7 @@ func (a *VolumeApiService) VolumeDelete(ctx context.Context, volume string) (*ht
 	}
 
 	// to determine the Accept header
-	localVarHttpHeaderAccepts := []string{
-		"application/json",
-	}
+	localVarHttpHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
@@ -253,13 +238,12 @@ func (a *VolumeApiService) VolumeDelete(ctx context.Context, volume string) (*ht
 		bodyBytes, _ := ioutil.ReadAll(localVarHttpResponse.Body)
 		return localVarHttpResponse, reportError("Status: %v, Body: %s", localVarHttpResponse.Status, bodyBytes)
 	}
-
 	return localVarHttpResponse, err
 }
 
 /* VolumeApiService
 Get a volume.
-* @param ctx context.Context for authentication, logging, tracing, etc.
+ * @param ctx context.Context for authentication, logging, tracing, etc.
 @param volume Volume name.
 @return Volume*/
 func (a *VolumeApiService) VolumeGet(ctx context.Context, volume string) (Volume, *http.Response, error) {
@@ -278,7 +262,6 @@ func (a *VolumeApiService) VolumeGet(ctx context.Context, volume string) (Volume
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-
 	if strlen(volume) < 1 {
 		return successPayload, nil, reportError("volume must have at least 1 elements")
 	}
@@ -293,9 +276,7 @@ func (a *VolumeApiService) VolumeGet(ctx context.Context, volume string) (Volume
 	}
 
 	// to determine the Accept header
-	localVarHttpHeaderAccepts := []string{
-		"application/json",
-	}
+	localVarHttpHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
@@ -338,15 +319,15 @@ func (a *VolumeApiService) VolumeGet(ctx context.Context, volume string) (Volume
 
 /* VolumeApiService
 List volumes.
-* @param ctx context.Context for authentication, logging, tracing, etc.
-@return VolumeListResponse*/
-func (a *VolumeApiService) VolumeList(ctx context.Context) (VolumeListResponse, *http.Response, error) {
+ * @param ctx context.Context for authentication, logging, tracing, etc.
+@return []Volume*/
+func (a *VolumeApiService) VolumeList(ctx context.Context) ([]Volume, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		successPayload     VolumeListResponse
+		successPayload     []Volume
 	)
 
 	// create path and map variables
@@ -366,9 +347,7 @@ func (a *VolumeApiService) VolumeList(ctx context.Context) (VolumeListResponse, 
 	}
 
 	// to determine the Accept header
-	localVarHttpHeaderAccepts := []string{
-		"application/json",
-	}
+	localVarHttpHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
@@ -411,7 +390,7 @@ func (a *VolumeApiService) VolumeList(ctx context.Context) (VolumeListResponse, 
 
 /* VolumeApiService
 List volume plans.
-* @param ctx context.Context for authentication, logging, tracing, etc.
+ * @param ctx context.Context for authentication, logging, tracing, etc.
 @return VolumePlansListResponse*/
 func (a *VolumeApiService) VolumePlansList(ctx context.Context) (VolumePlansListResponse, *http.Response, error) {
 	var (
@@ -439,9 +418,7 @@ func (a *VolumeApiService) VolumePlansList(ctx context.Context) (VolumePlansList
 	}
 
 	// to determine the Accept header
-	localVarHttpHeaderAccepts := []string{
-		"application/json",
-	}
+	localVarHttpHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
@@ -484,7 +461,7 @@ func (a *VolumeApiService) VolumePlansList(ctx context.Context) (VolumePlansList
 
 /* VolumeApiService
 Unbind volume.
-* @param ctx context.Context for authentication, logging, tracing, etc.
+ * @param ctx context.Context for authentication, logging, tracing, etc.
 @param volume Volume name.
 @param optional (nil or map[string]interface{}) with one or more of:
     @param "bindData" (VolumeBindData)
@@ -504,7 +481,6 @@ func (a *VolumeApiService) VolumeUnbind(ctx context.Context, volume string, loca
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-
 	if strlen(volume) < 1 {
 		return nil, reportError("volume must have at least 1 elements")
 	}
@@ -519,9 +495,7 @@ func (a *VolumeApiService) VolumeUnbind(ctx context.Context, volume string, loca
 	}
 
 	// to determine the Accept header
-	localVarHttpHeaderAccepts := []string{
-		"application/json",
-	}
+	localVarHttpHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
@@ -558,6 +532,5 @@ func (a *VolumeApiService) VolumeUnbind(ctx context.Context, volume string, loca
 		bodyBytes, _ := ioutil.ReadAll(localVarHttpResponse.Body)
 		return localVarHttpResponse, reportError("Status: %v, Body: %s", localVarHttpResponse.Status, bodyBytes)
 	}
-
 	return localVarHttpResponse, err
 }
